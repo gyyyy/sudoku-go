@@ -141,13 +141,13 @@ func handleOnlyCan(sdk *Sudoku) error {
 	return nil
 }
 
-func burp(sdk *Sudoku) bool {
+func bruteForce(sdk *Sudoku) bool {
 	total := 1
 	for _, v := range sdk.remain {
 		total *= v
 	}
 	if Verbose {
-		log.Printf("starting burp with %d round\n", total)
+		log.Printf("starting brute force with %d round\n", total)
 	}
 LOOP:
 	for i := 0; i <= total; {
@@ -162,7 +162,7 @@ LOOP:
 				}
 				for n := range cell.canVal {
 					if Verbose {
-						log.Printf("[R-%d] burping: G(%d,%d) - C(%d,%d) => %d\n", i+1, gong.index[0], gong.index[1], cell.index[0], cell.index[1], n)
+						log.Printf("[R-%d] brute forcing: G(%d,%d) - C(%d,%d) => %d\n", i+1, gong.index[0], gong.index[1], cell.index[0], cell.index[1], n)
 					}
 					if i++; cell.Set(n) == nil && handleOnlyCan(cpy) == nil {
 						break
@@ -182,11 +182,11 @@ LOOP:
 		}
 	}
 	if Verbose {
-		log.Println("burp failed")
+		log.Println("brute force failed")
 	}
 	return false
 }
 
 func Resolve(sdk *Sudoku) bool {
-	return handleOnlyCan(sdk) == nil && (sdk.IsCompleted() || burp(sdk))
+	return handleOnlyCan(sdk) == nil && (sdk.IsCompleted() || bruteForce(sdk))
 }
